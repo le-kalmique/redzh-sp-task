@@ -1,0 +1,12 @@
+{
+  "@microsoft/generator-sharepoint": {
+    "version": "1.11.0",
+    "libraryName": "subscriptions-service",
+    "libraryId": "f0eba28a-72f7-4c26-82b3-ee5b21249b39",
+    "environment": "spo",
+    "packageManager": "npm",
+    "isCreatingSolution": true,
+    "isDomainIsolated": false,
+    "componentType": "webpart"
+  }
+}

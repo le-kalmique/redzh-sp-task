@@ -7,7 +7,6 @@ import { SubscriptionTypes } from './SubscriptionTypes';
 import { sp } from '@pnp/sp';
 
 import SubscriptionUpdateForm from '../SubscriptionUpdateForm/SubscriptionUpdateForm';
-import './Subscription.css';
 
 
 interface IState {
@@ -84,12 +83,12 @@ export default class Subscription extends React.Component<IProps, IState> {
                 :
             (price * getTypeCoef(this.state.type)).toFixed(2);
 
-        return <div className="subscription">
-            <div className="unchangeableContent">
+        return <div className="subscription ms-Grid" style={{marginTop: '1.5rem'}}>
+            <div className="unchangeableContent ms-Grid-col" style={{marginRight: '3rem'}}>
                 <div className="description" dangerouslySetInnerHTML={{__html: this.props.item.subscriptionDescription}}></div>
-                <div className="price">
+                <h3 className="price" style={{fontSize: '2rem', margin: '1rem auto auto'}}>
                     {totalPrice}$
-                </div>
+                </h3>
                 <div className="responsible"><i>Responsible</i>: {this.props.item.responsible.Title}</div>
             </div>
             <SubscriptionUpdateForm 

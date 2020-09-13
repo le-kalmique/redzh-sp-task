@@ -105,7 +105,7 @@ export default class SubscriptionUpdateForm extends React.Component<IProps, ISta
             {this.state.isLoading ?
                 <Spinner/>
                 :
-                <form className="changeableContent">
+                <form className="changeableContent ms-Grid-col">
                     <Dropdown
                         placeholder="Select the type"
                         defaultSelectedKey={this.props.selectedType}
