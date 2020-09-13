@@ -1,0 +1,22 @@
+.subscription {
+    display: flex;
+    flex-direction: row;
+    margin-top: 1.5rem;
+}
+
+.unchangeableContent {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin-right: 3rem;
+}
+
+.price {
+    font-size: 2rem;
+    margin: auto;
+    margin-top: 1rem;
+}
+
+.responsible {
+    margin-top: 1rem;
+}
