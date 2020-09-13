@@ -7,7 +7,7 @@ import { SubscriptionTypes } from './SubscriptionTypes';
 import { sp } from '@pnp/sp';
 
 import SubscriptionUpdateForm from '../SubscriptionUpdateForm/SubscriptionUpdateForm';
-import './Subscription.module.scss';
+import './Subscription.css';
 
 
 interface IState {
