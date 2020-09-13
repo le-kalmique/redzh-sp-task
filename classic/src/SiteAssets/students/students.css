@@ -1,0 +1,82 @@
+.cards {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.card {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 20vw;
+    padding: 1rem;
+    margin: 2rem;
+
+    border: 2px solid teal;
+    border-radius: 2px;
+
+    transition: box-shadow 0.3s ease-in-out;
+}
+
+.card:hover {
+    -webkit-box-shadow: 0px 0px 5px 0px rgba(3,131,135,1);
+    -moz-box-shadow: 0px 0px 5px 0px rgba(3,131,135,1);
+    box-shadow: 0px 0px 5px 0px rgba(3,131,135,1);
+
+    cursor: pointer;
+} 
+
+.card__header {
+    color: teal;
+    font-weight: 600;
+    margin-right: 25px;
+    margin-left: 15px;
+}
+
+.card__content {
+    width: 70%;
+}
+
+.card__list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.plus {
+    margin: auto;
+    line-height: 1;
+    font-size: 5rem;
+    color: teal;
+
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.form {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.form__content {
+    width: 70%;
+}
+
+.form__input {
+    width: 90%;
+    margin: 5px;
+    padding: 0.5em;
+    resize: none;
+}
+
+.form__submit {
+    width: 25%;
+    height: 25px;
+    padding: 0.5em;
+}

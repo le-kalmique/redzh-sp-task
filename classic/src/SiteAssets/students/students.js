@@ -21,11 +21,79 @@ class StudentsWP {
         try {
             const request = await fetch(query, {headers});
             const result = await request.json();
+            this.studentList = result.d.results;
             return result;
         } catch (err) {
             console.error(err);
         }
     }
+
+    /** Add new Student Item to List
+     * @param {Object} student Student Item
+     */
+    addStudentToList = (student) => {
+        const RequestDigest = $("#__REQUESTDIGEST").val();
+        const query = _spPageContextInfo.webAbsoluteUrl + "/_api/lists/getbytitle('Students')/items";  
+
+        const objType = {
+            __metadata: {
+                type: 'SP.Data.StudentsListItem'
+            }
+        }
+        const objData = JSON.stringify(Object.assign(objType, student));
+
+        return $.ajax({
+            url: query,
+            type: 'POST',
+            data: objData,
+            headers: {
+                'Accept': 'application/json;odata=verbose',
+                'Content-Type': 'application/json;odata=verbose',
+                'X-RequestDigest': RequestDigest,
+                'IF-MATCH': '*',
+                'X-HTTP-Method': 'Merge'
+            }
+        });
+    }
+
+    /** Create card for adding new student to the list
+     * @returns {JQuery.Object} card jquery object
+    */
+    createAddStudentCard = () => {
+        const card = $('<div></div>').addClass('card').attr('id', 'newStudent');
+        const addIcon = $('<h3></h3>').addClass('plus').text('+');
+        card.append(addIcon);
+        
+        const form = $('<form></form>').addClass('form');
+        const inputs = $('<div></div>').addClass('form__content');
+        const nameInput = $('<input/>').addClass('form__input').attr('id', 'fname')
+                    .attr('type', 'text').attr('placeholder', 'Enter name...')
+                    .attr('name', 'fullname').attr('required', 'true');
+        const bioInput = $('<textarea/>').addClass('form__input').attr('id', 'bio')
+                    .attr('placeholder', 'Enter bio...').attr('name', 'bio');
+        const submit = $('<button/>').addClass('form__submit').text('Submit');
+        inputs.append(nameInput).append(bioInput);
+        form.append(inputs).append(submit);
+
+        form.on('submit', ev => {
+            ev.preventDefault();
+            const student = {
+                fullname: $('#fname').val(),
+                bio: $('#bio').val()
+            };
+            this.addStudentToList(student);
+            console.log('nu')
+            location.reload();
+        })
+
+        card.click(ev => {
+            card.off('click');
+            card.empty().append(form);
+        })
+        
+        return card;
+    }
+
 
     /** Render Students WebPart HTML on the webpage
      * @param result - result of a Get request for the List of Students
@@ -35,12 +103,10 @@ class StudentsWP {
         let studentsHtmlStr = "";
         const students = studentsList.map(studentItem => new StudentItem(studentItem));
         for (const item of students) {
-            console.log('what')
             await item.populate();
-            console.log('the')
             studentsHtmlStr += item.getHtml();
         }
-        $(`#${this.studentsBodyId}`).html(studentsHtmlStr);
+        $(`#${this.studentsBodyId}`).html(studentsHtmlStr).append(this.createAddStudentCard());
     }
 }
 
@@ -52,33 +118,34 @@ class StudentItem {
      */
     constructor(studentItem) {
         this.fullName = studentItem.fullname;
-        this.bio = studentItem.bio;
-        this.homeRegion = studentItem.homeRegion;
+        this.bio = studentItem.bio || 'Unknown';
+        this.homeRegion = studentItem.homeRegion || 'Unknown';
         this.currentlyStudying = studentItem.currentlyStudying;
         this.curatorId = studentItem.curatorId;
         this.facultyId = studentItem.facultyId;
         this.subjectsIds = studentItem.selectedSubjectsId.results;
     }
 
+    /** Extend student item with external lists' elements */
     async populate() {
-        console.log('here')
         await this.setCurator(this.curatorId);
         await this.setFaculty(this.facultyId);
         await this.setSelectedSubjects(this.subjectsIds);
-        console.log('help me')
     } 
 
+    /** Get Html for Student card
+     * @returns {string} html string
+     */
     getHtml() {
         const card = $('<div></div>').addClass('card');
         const header = $('<h3></h3>').addClass('card__header').text(this.fullName);
         const content = $('<div></div>').addClass('card__content');
         const bio = $('<p></p>').addClass('card__bio').text(this.bio);
-        // const info = $('<div></div>').addClass('card__info');
         const info = $('<ul></ul>').addClass('card__list');
-        const faculty = $('<li></li>').addClass('card__item').text('Faculty: ' + this.faculty);
-        const homeRegion = $('<li></li>').addClass('card__item').text('Region: ' + this.homeRegion);
-        const curator = $('<li></li>').addClass('card__item').text('Curator: ' + this.curator);
-        const dorm = $('<li></li>').addClass('card__item').text('Dorm: ' + this.dorm);
+        const faculty = $('<li></li>').addClass('card__item').html('<b>Faculty</b>: ' + this.faculty);
+        const homeRegion = $('<li></li>').addClass('card__item').html('<b>Region</b>: ' + this.homeRegion);
+        const curator = $('<li></li>').addClass('card__item').html('<b>Curator</b>: ' + this.curator);
+        const dorm = $('<li></li>').addClass('card__item').html('<b>Dorm</b>: ' + this.dorm);
         
         info.append(faculty).append(homeRegion).append(dorm).append(curator);
         content.append(bio).append(info);
@@ -97,7 +164,7 @@ class StudentItem {
         try {
             const req = await fetch(query, {headers: { Accept: "application/json;odata=verbose"}})
             const res = await req.json();
-            this.curator = res.d.Title;
+            this.curator = res.d ? res.d.Title : 'Unknown';
         }
         catch (err) {
             console.error(err);
@@ -113,8 +180,8 @@ class StudentItem {
         try {
             const req = await fetch(query, {headers: { Accept: "application/json;odata=verbose"}})
             const res = await req.json();
-            this.faculty = res.d.shortFacultyName;
-            this.dorm = res.d.assignedDormNum;
+            this.faculty = res.d ? res.d.shortFacultyName : 'Unknown';
+            this.dorm = res.d ? res.d.assignedDormNum : 'Unknown';
         } 
         catch(err) {
             console.error(err);
@@ -132,7 +199,7 @@ class StudentItem {
             try {
                 const req = await fetch(query, {headers: { Accept: "application/json;odata=verbose"}})
                 const res = await req.json();
-                subjects.push(res.d.subjectName);
+                res.d ? subjects.push(res.d.subjectName) : {};
             }
             catch (err) {
                 console.error(err);
@@ -141,6 +208,7 @@ class StudentItem {
         this.selectedSubjects = subjects;
     }
 }
+
 
 SP.SOD.executeFunc("sp.js", "SP.ClientContext", function () {
     const studentsWP = new StudentsWP();
