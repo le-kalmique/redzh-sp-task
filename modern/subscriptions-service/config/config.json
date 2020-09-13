@@ -1,0 +1,18 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/config.2.0.schema.json",
+  "version": "2.0",
+  "bundles": {
+    "subscriptions-info-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/subscriptionsInfo/SubscriptionsInfoWebPart.js",
+          "manifest": "./src/webparts/subscriptionsInfo/SubscriptionsInfoWebPart.manifest.json"
+        }
+      ]
+    }
+  },
+  "externals": {},
+  "localizedResources": {
+    "SubscriptionsInfoWebPartStrings": "lib/webparts/subscriptionsInfo/loc/{locale}.js"
+  }
+}
